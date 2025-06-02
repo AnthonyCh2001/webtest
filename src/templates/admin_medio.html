@@ -1,0 +1,68 @@
+{% extends "layout_admin_medio.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Gestión de Usuarios - {{ session['empresa_nombre'] }}</h2>
+
+    <div class="text-end mb-3">
+        <a href="{{ url_for('admin_medio_agregar') }}" class="btn btn-primary btn-sm">
+            <i class="fas fa-user-plus"></i> Agregar Usuario
+        </a>
+    </div>
+
+    <div class="tabla-contenedor mb-4">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th class="text-center" style="width: 5%;">#</th>
+                    <th>Correo</th>
+                    <th>Contraseña</th>
+                    <th class="text-center">Reportes Generados</th>
+                    <th class="text-center">Estado</th>
+                    <th class="text-center" style="width: 18%;">Acciones</th>
+                </tr>
+                <tr class="search-row">
+                    <td colspan="6">
+                        <input type="text" id="buscador" class="form-control border border-dark" placeholder="Buscar por correo..." autocomplete="off" />
+                    </td>
+                </tr>
+            </thead>
+            <tbody id="tablaUsuarios">
+                {% for usuario in usuarios %}
+                <tr>
+                    <td class="text-center">{{ loop.index }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>{{ usuario.contrasena }}</td>
+                    <td class="text-center">{{ usuario.cantidad_reportes }}</td>
+                    <td class="text-center">
+                        {% if usuario.activo %}
+                            <span class="badge bg-success">Activo</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ url_for('admin_medio_editar', usuario_id=usuario.id) }}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{{ url_for('admin_medio_eliminar', usuario_id=usuario.id) }}" class="btn btn-danger btn-sm"
+                           onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Búsqueda por correo
+    document.getElementById('buscador').addEventListener('input', function () {
+        const valor = this.value.toLowerCase();
+        const filas = document.querySelectorAll('#tablaUsuarios tr');
+        filas.forEach(fila => {
+            const correo = fila.children[1].textContent.toLowerCase();
+            fila.style.display = correo.includes(valor) ? '' : 'none';
+        });
+    });
+</script>
+{% endblock %}

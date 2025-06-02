@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+
+{% block title %}Login | HIRENOTES AI{% endblock %}
+
+{% block content %}
+<div class="position-relative" style="height: 100vh;">
+    <div class="position-absolute top-0 start-50 translate-middle-x" style="margin-top: 30px; z-index: 10; width: 100%; max-width: 400px;">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'danger' else 'warning' }} text-center">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center" style="height: 100%; position: relative;">
+        <div class="card shadow p-4" style="max-width: 400px; width: 100%; border-radius: 12px;">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold" style="color: #9b59b6;">HIRENOTES AI</h2>
+                <p class="text-muted" style="font-size: 1.1rem;">Accede a tu panel de gestión</p>
+            </div>
+
+            <form method="post">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo electrónico</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="ejemplo@correo.com" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="contrasena" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="•••••" required>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-purple">Ingresar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    setTimeout(() => {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => alert.remove());
+    }, 4000);
+</script>
+{% endblock %}

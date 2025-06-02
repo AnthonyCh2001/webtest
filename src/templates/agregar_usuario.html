@@ -1,0 +1,22 @@
+{% extends "layout_admin_medio.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Agregar Usuario</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" name="nombre" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Correo</label>
+            <input type="email" class="form-control" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="contrasena" class="form-label">Contraseña</label>
+            <input type="text" class="form-control" name="contrasena" required>
+        </div>
+        <button type="submit" class="btn btn-success">Agregar</button>
+        <a href="{{ url_for('vista_admin_medio') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

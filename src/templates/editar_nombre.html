@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Editar nombre PDF | HIRENOTES AI</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <style>
+    body {
+      background-color: #f4f6f8;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .main-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .contenedor {
+      background: #ffffff;
+      padding: 2.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .titulo-principal {
+      text-align: center;
+      font-weight: 800;
+      font-size: 1.8rem;
+      color: #2c3e50;
+      margin-bottom: 1rem;
+    }
+
+    .subtitulo {
+      text-align: center;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      color: #7f8c8d;
+    }
+
+    .form-label {
+      font-weight: 600;
+    }
+
+    .footer-note {
+      margin-top: 30px;
+      font-size: 0.9rem;
+      color: #aaa;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="main-container">
+    <div class="contenedor">
+
+      <h1 class="titulo-principal">Editar nombre del PDF</h1>
+      <p class="subtitulo">Modifica el nombre del archivo asegurándote de que sea único y termine en <code>.pdf</code>.
+      </p>
+
+      <form method="POST" action="{{ url_for('editar_pdf', nombre=nombre_actual) }}">
+        <input type="hidden" name="origen" value="{{ origen }}">
+
+        <div class="mb-3">
+          <label for="nombre_actual" class="form-label">Nombre actual</label>
+          <input type="text" id="nombre_actual" class="form-control" value="{{ nombre_actual }}" disabled>
+        </div>
+
+        <div class="mb-3">
+          <label for="nuevo_nombre" class="form-label">Nuevo nombre</label>
+          <input type="text" id="nuevo_nombre" name="nuevo_nombre" class="form-control" value="{{ nombre_actual }}"
+            required>
+          <div class="form-text">Debe terminar en <code>.pdf</code> y no contener caracteres especiales.</div>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-primary" disabled>
+            <i class="bi bi-save"></i> Guardar Cambios
+          </button>
+          <a href="{% if origen == 'pdfs_comparativo_admin_medio' %}{{ url_for('listar_pdfs_comparativo_admin_medio') }}
+                   {% elif origen == 'pdfs_admin_medio' %}{{ url_for('listar_pdfs_admin_medio') }}
+                   {% elif origen == 'pdfs_comparativos' %}{{ url_for('listar_pdfs_comparativos') }}
+                   {% else %}{{ url_for('listar_pdfs') }}{% endif %}" class="btn btn-secondary">
+            <i class="bi bi-x-circle"></i> Cancelar
+          </a>
+        </div>
+      </form>
+
+    </div>
+
+    <div class="footer-note">© 2025 HIRENOTES AI - Todos los derechos reservados</div>
+  </div>
+
+  <script>
+    const btnGuardar = document.querySelector('button[type="submit"]');
+    const nombreActual = "{{ nombre_actual }}";
+    const inputNuevo = document.getElementById('nuevo_nombre');
+
+    inputNuevo.addEventListener('input', () => {
+      const regex = /^[a-zA-Z0-9_\- ]+\.pdf$/;
+      if (inputNuevo.value.trim() === '' || inputNuevo.value === nombreActual || !regex.test(inputNuevo.value)) {
+        btnGuardar.disabled = true;
+        inputNuevo.setCustomValidity('El nombre debe terminar en .pdf y no contener caracteres especiales.');
+      } else {
+        btnGuardar.disabled = false;
+        inputNuevo.setCustomValidity('');
+      }
+    });
+
+    // AUTO-CIERRE DE MENSAJES FLASH
+    setTimeout(() => {
+      const alerts = document.querySelectorAll('.alert');
+      alerts.forEach(alert => {
+        alert.classList.remove('show');
+        alert.classList.add('fade');
+        setTimeout(() => alert.remove(), 500); // elimina el nodo del DOM después de la animación
+      });
+    }, 3000); // 3 segundos
+  </script>
+
+</body>
+
+</html>
