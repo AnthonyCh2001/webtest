@@ -6,8 +6,4 @@ pandas
 openpyxl
 datetime
 matplotlib
-<<<<<<< HEAD
 python-dotenv
-=======
-python-dotenv
->>>>>>> 2db44c310356da181b0a7d366d2e957a55f51074
