@@ -1,6 +1,7 @@
 import os
 import psycopg2
 from dotenv import load_dotenv
+import psycopg2.extras
 load_dotenv() 
 
 class DAOUsuario:
