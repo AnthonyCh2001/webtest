@@ -1,13 +1,18 @@
-import pymysql
+import os
+import psycopg2
+from dotenv import load_dotenv
+load_dotenv() 
 
 class DAOReportes:
+    def __init__(self):
+        self.db_url = os.getenv("DATABASE_URL")
+
     def connect(self):
-        return pymysql.connect(host="localhost", user="root", password="", db="db_poo")
+        return psycopg2.connect(self.db_url)
 
     def insertar_reporte(self, data):
         con = self.connect()
         cursor = con.cursor()
-
         try:
             sql = """
                 INSERT INTO reportes
@@ -20,7 +25,7 @@ class DAOReportes:
                 data['es_comparativo'],
                 data['nombre_documento_origen'],
                 data['origen_documento'],
-                data['empresa_id'],  # Asegúrate de pasar 'empresa_id'
+                data['empresa_id'],
                 data['usuario_id']
             ))
             con.commit()
@@ -30,11 +35,12 @@ class DAOReportes:
             con.rollback()
             return False
         finally:
+            cursor.close()
             con.close()
 
     def obtener_reportes_individuales_por_usuario(self, usuario_id):
         con = self.connect()
-        cursor = con.cursor(pymysql.cursors.DictCursor)
+        cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
         try:
             sql = """
                 SELECT nombre_pdf
@@ -47,6 +53,7 @@ class DAOReportes:
             print(f"[DAOReportes] Error al obtener reportes individuales del usuario: {e}")
             return []
         finally:
+            cursor.close()
             con.close()
 
     def actualizar_nombre_pdf(self, nombre_actual, nuevo_nombre):
@@ -62,12 +69,12 @@ class DAOReportes:
             con.rollback()
             return False
         finally:
+            cursor.close()
             con.close()
 
-    
     def obtener_reportes_comparativos_por_usuario(self, usuario_id):
         con = self.connect()
-        cursor = con.cursor(pymysql.cursors.DictCursor)
+        cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
         try:
             sql = """
                 SELECT nombre_pdf
@@ -80,12 +87,12 @@ class DAOReportes:
             print(f"[DAOReportes] Error al obtener reportes comparativos del usuario: {e}")
             return []
         finally:
+            cursor.close()
             con.close()
-
 
     def obtener_reportes_comparativos_por_empresa(self, empresa_id):
         con = self.connect()
-        cursor = con.cursor(pymysql.cursors.DictCursor)
+        cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
         try:
             sql = """
                 SELECT nombre_pdf
@@ -98,9 +105,8 @@ class DAOReportes:
             print(f"[DAOReportes] Error al obtener reportes comparativos de la empresa: {e}")
             return []
         finally:
+            cursor.close()
             con.close()
-
-
 
     def eliminar_reporte_por_nombre_pdf(self, nombre_pdf):
         con = self.connect()
@@ -113,87 +119,4 @@ class DAOReportes:
             print(f"[DAOReportes] Error al eliminar reporte: {e}")
             con.rollback()
         finally:
-            con.close()
-
-
-    def contar_reportes_por_usuario(self, usuario_id):
-        con = self.connect()
-        cursor = con.cursor()
-
-        try:
-            cursor.execute("SELECT COUNT(*) FROM reportes WHERE usuario_id = %s", (usuario_id,))
-            result = cursor.fetchone()
-            return result[0] if result else 0
-        except Exception as e:
-            print(f"[DAOReportes] Error al contar reportes: {e}")
-            return 0
-        finally:
-            con.close()
-
-    def contar_reportes_por_empresa(self, empresa_id):
-        con = self.connect()
-        cursor = con.cursor()
-        try:
-            print(f"[DEBUG] Consultando reportes para empresa_id: {empresa_id}")  # Depuración
-            cursor.execute("SELECT COUNT(*) FROM reportes WHERE empresa_id = %s", (empresa_id,))
-            result = cursor.fetchone()
-            return result[0] if result else 0
-        except Exception as e:
-            print(f"[DAOReportes] Error al contar reportes por empresa: {e}")
-            return 0
-        finally:
-            con.close()
-
-    def eliminar_reportes_por_usuario(self, usuario_id):
-        con = self.connect()
-        cursor = con.cursor()
-        try:
-            cursor.execute("DELETE FROM reportes WHERE usuario_id = %s", (usuario_id,))
-            con.commit()
-        except Exception as e:
-            print(f"[DAOReportes] Error al eliminar reportes del usuario: {e}")
-        finally:
-            con.close()
-
-    def obtener_reportes_individuales_por_empresa(self, empresa_id):
-        con = self.connect()
-        cursor = con.cursor(pymysql.cursors.DictCursor)
-        try:
-            sql = """
-            SELECT r.nombre_pdf, u.email as usuario_email
-            FROM reportes r
-            JOIN usuarios u ON r.usuario_id = u.id
-            WHERE u.empresa_id = %s AND r.es_comparativo = 0
-            """
-            cursor.execute(sql, (empresa_id,))
-            resultados = cursor.fetchall()
-            return resultados
-        except Exception as e:
-            print(f"[DAOReportes] Error al obtener reportes individuales por empresa: {e}")
-            return []
-        finally:
-            cursor.close()
-            con.close()
-
-    def obtener_reportes_comparativos_por_empresa(self, empresa_id):
-        con = self.connect()
-        cursor = con.cursor(pymysql.cursors.DictCursor)
-        try:
-            sql = """
-            SELECT r.nombre_pdf, u.email as usuario_email
-            FROM reportes r
-            JOIN usuarios u ON r.usuario_id = u.id
-            WHERE u.empresa_id = %s AND r.es_comparativo = 1
-            """
-            cursor.execute(sql, (empresa_id,))
-            resultados = cursor.fetchall()
-            return resultados
-        except Exception as e:
-            print(f"[DAOReportes] Error al obtener reportes comparativos por empresa: {e}")
-            return []
-        finally:
-            cursor.close()
-            con.close()
-
-
-
+            cursor

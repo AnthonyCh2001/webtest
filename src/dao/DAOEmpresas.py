@@ -1,8 +1,14 @@
-import pymysql
+import os
+import psycopg2
+from dotenv import load_dotenv
+load_dotenv() 
 
 class DAOEmpresas:
+    def __init__(self):
+        self.db_url = os.getenv("DATABASE_URL")
+
     def connect(self):
-        return pymysql.connect(host="localhost", user="root", password="", db="db_poo")
+        return psycopg2.connect(self.db_url)
 
     def obtener_empresa_id_por_usuario(self, usuario_id):
         con = self.connect()
@@ -16,6 +22,7 @@ class DAOEmpresas:
             print(f"[DAOEmpresas] Error al obtener empresa_id del usuario: {e}")
             return None
         finally:
+            cursor.close()
             con.close()
 
     def obtener_nombre_empresa(self, empresa_id):
@@ -29,11 +36,12 @@ class DAOEmpresas:
             print(f"[DAOEmpresas] Error al obtener nombre de empresa: {e}")
             return ""
         finally:
+            cursor.close()
             con.close()
 
     def obtener_usuarios_por_empresa(self, empresa_id):
         con = self.connect()
-        cursor = con.cursor(pymysql.cursors.DictCursor)
+        cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
         try:
             cursor.execute("""
                 SELECT id, nombre, email, contrasena
@@ -45,6 +53,7 @@ class DAOEmpresas:
             print(f"[DAOEmpresas] Error al obtener usuarios por empresa: {e}")
             return []
         finally:
+            cursor.close()
             con.close()
 
     def obtener_limite_usuarios(self, empresa_id):
@@ -58,6 +67,7 @@ class DAOEmpresas:
             print(f"[DAOEmpresas] Error al obtener límite de usuarios: {e}")
             return 0
         finally:
+            cursor.close()
             con.close()
 
     def contar_usuarios_activos(self, empresa_id):
@@ -74,6 +84,7 @@ class DAOEmpresas:
             print(f"[DAOEmpresas] Error al contar usuarios activos: {e}")
             return 0
         finally:
+            cursor.close()
             con.close()
 
     def obtener_limite_reportes(self, empresa_id):
@@ -87,4 +98,5 @@ class DAOEmpresas:
             print(f"[DAOEmpresas] Error al obtener límite de reportes: {e}")
             return 0
         finally:
+            cursor.close()
             con.close()

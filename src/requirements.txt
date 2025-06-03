@@ -1,0 +1,9 @@
+Flask
+pymysql
+cohere
+fpdf
+pandas
+openpyxl
+datetime
+matplotlib
+python-dotenv

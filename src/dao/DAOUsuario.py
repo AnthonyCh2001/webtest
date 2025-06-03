@@ -1,23 +1,30 @@
-import pymysql
+import os
+import psycopg2
+from dotenv import load_dotenv
+load_dotenv() 
 
 class DAOUsuario:
+    def __init__(self):
+        self.db_url = os.getenv("DATABASE_URL")
+
     def connect(self):
-        return pymysql.connect(host="localhost", user="root", password="", db="db_poo")
+        return psycopg2.connect(self.db_url)
 
     def get_user_by_email(self, email):
         con = self.connect()
-        cursor = con.cursor(pymysql.cursors.DictCursor)
+        cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
         try:
             cursor.execute("SELECT * FROM usuarios WHERE email = %s AND activo = TRUE", (email,))
             return cursor.fetchone()
-        except:
+        except Exception:
             return None
         finally:
+            cursor.close()
             con.close()
 
     def obtener_usuarios_por_empresa(self, empresa_id):
         con = self.connect()
-        cursor = con.cursor(pymysql.cursors.DictCursor)
+        cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
         try:
             cursor.execute("SELECT id, email, contrasena FROM usuarios WHERE empresa_id = %s", (empresa_id,))
             return cursor.fetchall()
@@ -25,13 +32,12 @@ class DAOUsuario:
             print(f"[DAOUsuarios] Error al obtener usuarios por empresa: {e}")
             return []
         finally:
+            cursor.close()
             con.close()
-
 
     def obtener_limite(self, usuario_id):
         con = self.connect()
         cursor = con.cursor()
-
         try:
             sql = """
                 SELECT e.limite_reportes
@@ -46,6 +52,7 @@ class DAOUsuario:
             print(f"[DAOUsuarios] Error al obtener límite: {e}")
             return 0
         finally:
+            cursor.close()
             con.close()
 
     def obtener_empresa_id(self, usuario_id):
@@ -59,11 +66,12 @@ class DAOUsuario:
             print(f"[DAOUsuario] Error al obtener empresa_id: {e}")
             return None
         finally:
+            cursor.close()
             con.close()
 
-    def obtener_usuarios_por_empresa(self, empresa_id):
+    def obtener_usuarios_por_empresa_detallado(self, empresa_id):
         con = self.connect()
-        cursor = con.cursor(pymysql.cursors.DictCursor)
+        cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
         try:
             sql = """
                 SELECT id, email, contrasena, activo
@@ -78,9 +86,9 @@ class DAOUsuario:
             print(f"[DAOUsuarios] Error al obtener usuarios por empresa: {e}")
             return []
         finally:
+            cursor.close()
             con.close()
 
-    
     def insertar_usuario(self, nombre, email, contrasena, empresa_id):
         con = self.connect()
         cursor = con.cursor()
@@ -93,12 +101,14 @@ class DAOUsuario:
             con.commit()
         except Exception as e:
             print(f"[DAOUsuario] Error al insertar usuario: {e}")
+            con.rollback()
         finally:
+            cursor.close()
             con.close()
 
     def obtener_usuario_por_id(self, usuario_id):
         con = self.connect()
-        cursor = con.cursor(pymysql.cursors.DictCursor)
+        cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
         try:
             cursor.execute("SELECT id, email, contrasena, activo FROM usuarios WHERE id = %s", (usuario_id,))
             return cursor.fetchone()
@@ -106,6 +116,7 @@ class DAOUsuario:
             print(f"[DAOUsuario] Error al obtener usuario: {e}")
             return None
         finally:
+            cursor.close()
             con.close()
 
     def actualizar_usuario(self, usuario_id, nueva_contrasena, activo):
@@ -118,7 +129,9 @@ class DAOUsuario:
             con.commit()
         except Exception as e:
             print(f"[DAOUsuario] Error al actualizar usuario: {e}")
+            con.rollback()
         finally:
+            cursor.close()
             con.close()
 
     def eliminar_usuario(self, usuario_id):
@@ -129,7 +142,7 @@ class DAOUsuario:
             con.commit()
         except Exception as e:
             print(f"[DAOUsuario] Error al eliminar usuario: {e}")
+            con.rollback()
         finally:
+            cursor.close()
             con.close()
-
-
