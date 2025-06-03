@@ -7,3 +7,4 @@ openpyxl
 datetime
 matplotlib
 python-dotenv
+psycopg2-binary
