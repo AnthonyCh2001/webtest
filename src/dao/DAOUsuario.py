@@ -65,24 +65,6 @@ class DAOUsuario:
         finally:
             con.close()
 
-    def obtener_usuarios_por_empresa(self, empresa_id):
-        con = self.connect()
-        cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        try:
-            sql = """
-                SELECT id, email, contrasena, activo
-                FROM usuarios
-                WHERE empresa_id = %s AND rol = 'usuario'
-            """
-            cursor.execute(sql, (empresa_id,))
-            resultados = cursor.fetchall()
-            print(f"[DAOUsuarios] Usuarios encontrados para empresa {empresa_id}: {resultados}")
-            return resultados
-        except Exception as e:
-            print(f"[DAOUsuarios] Error al obtener usuarios por empresa: {e}")
-            return []
-        finally:
-            con.close()
 
     def insertar_usuario(self, nombre, email, contrasena, empresa_id, rol):
         con = self.connect()

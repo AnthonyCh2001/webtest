@@ -1611,8 +1611,11 @@ def vista_admin_medio():
     print(f"[admin_medio] Usuarios encontrados: {usuarios}")
 
     for usuario in usuarios:
-        usuario = dict(row) 
-        usuario['cantidad_reportes'] = dao_reportes.contar_reportes_por_usuario(usuario['id'])
+        if 'id' in usuario:
+            cantidad = dao_reportes.contar_reportes_por_usuario(usuario['id'])
+            usuario['cantidad_reportes'] = cantidad
+        else:
+            usuario['cantidad_reportes'] = 0
 
     return render_template('admin_medio.html', usuarios=usuarios)
 
