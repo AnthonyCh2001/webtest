@@ -1610,9 +1610,11 @@ def vista_admin_medio():
     usuarios = dao_usuario.obtener_usuarios_por_empresa(empresa_id)
     print(f"[admin_medio] Usuarios encontrados: {usuarios}")
 
-    for usuario in usuarios:
-        usuario = dict(usuario)
-        usuario['cantidad_reportes'] = dao_reportes.contar_reportes_por_usuario(usuario['id'])
+    # ✅ SOLUCIÓN CORRECTA
+    for i in range(len(usuarios)):
+        usuario_dict = dict(usuarios[i])
+        usuario_dict['cantidad_reportes'] = dao_reportes.contar_reportes_por_usuario(usuario_dict['id'])
+        usuarios[i] = usuario_dict
 
     return render_template('admin_medio.html', usuarios=usuarios)
 
