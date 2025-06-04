@@ -32,9 +32,9 @@
         <div class="mb-3">
             <label for="plan" class="form-label">Plan</label>
             <select id="plan" name="plan" class="form-select" required>
-                <option value="Básico" {% if empresa.plan=='Básico' %}selected{% endif %}>Básico</option>
+                <option value="Basico" {% if empresa.plan=='Basico' %}selected{% endif %}>Básico</option>
                 <option value="Intermedio" {% if empresa.plan=='Intermedio' %}selected{% endif %}>Intermedio</option>
-                <option value="Premium" {% if empresa.plan=='Premium' %}selected{% endif %}>Premium</option>
+                <option value="Avanzado" {% if empresa.plan=='Avanzado' %}selected{% endif %}>Avanzado</option>
             </select>
         </div>
 
