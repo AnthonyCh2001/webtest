@@ -7,7 +7,7 @@ USE db_poo;
 CREATE TABLE empresas (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    plan VARCHAR(50) NOT NULL CHECK (plan IN ('Personalizado', 'Avanzado', 'Intermedio', 'Basico')),
+    plan ENUM('Personalizado', 'Avanzado', 'Intermedio', 'Basico') NOT NULL,
     limite_usuarios INT DEFAULT 3,
     limite_reportes INT DEFAULT 5
 );
@@ -18,7 +18,7 @@ CREATE TABLE usuarios (
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     contrasena TEXT NOT NULL,
-    rol VARCHAR(20) NOT NULL CHECK (rol IN ('admin_superior', 'admin_medio', 'usuario')),
+    rol ENUM('admin_superior', 'admin_medio', 'usuario') NOT NULL DEFAULT 'usuario',
     empresa_id BIGINT UNSIGNED,
     activo BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (empresa_id) REFERENCES empresas(id)

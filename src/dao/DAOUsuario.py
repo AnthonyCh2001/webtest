@@ -66,14 +66,14 @@ class DAOUsuario:
             con.close()
 
 
-    def insertar_usuario(self, nombre, email, contrasena, empresa_id, rol):
+    def insertar_usuario(self, nombre, email, contrasena, empresa_id):
         con = self.connect()
         cursor = con.cursor()
         try:
             cursor.execute("""
-                INSERT INTO usuarios (nombre, email, contrasena, empresa_id, rol)
-                VALUES (%s, %s, %s, %s, %s)
-            """, (nombre, email, contrasena, empresa_id, rol))
+                INSERT INTO usuarios (nombre, email, contrasena, empresa_id)
+                VALUES (%s, %s, %s, %s)
+            """, (nombre, email, contrasena, empresa_id))
             con.commit()
         except Exception as e:
             print(f"[DAOUsuarios] Error al insertar usuario: {e}")
