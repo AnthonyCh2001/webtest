@@ -21,17 +21,7 @@ class DAOUsuario:
         finally:
             con.close()
 
-    def obtener_usuarios_por_empresa(self, empresa_id):
-        con = self.connect()
-        cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        try:
-            cursor.execute("SELECT id, email, contrasena FROM usuarios WHERE empresa_id = %s", (empresa_id,))
-            return cursor.fetchall()
-        except Exception as e:
-            print(f"[DAOUsuarios] Error al obtener usuarios por empresa: {e}")
-            return []
-        finally:
-            con.close()
+
 
     def obtener_limite(self, usuario_id):
         con = self.connect()
@@ -90,6 +80,26 @@ class DAOUsuario:
         except Exception as e:
             print(f"[DAOUsuario] Error al obtener usuario: {e}")
             return None
+        finally:
+            con.close()
+
+    
+    def obtener_usuarios_por_empresa(self, empresa_id):
+        con = self.connect()
+        cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        try:
+            sql = """
+                SELECT id, email, contrasena, activo
+                FROM usuarios
+                WHERE empresa_id = %s AND rol = 'usuario'
+            """
+            cursor.execute(sql, (empresa_id,))
+            resultados = cursor.fetchall()
+            print(f"[DAOUsuarios] Usuarios encontrados para empresa {empresa_id}: {resultados}")
+            return resultados
+        except Exception as e:
+            print(f"[DAOUsuarios] Error al obtener usuarios por empresa: {e}")
+            return []
         finally:
             con.close()
 
