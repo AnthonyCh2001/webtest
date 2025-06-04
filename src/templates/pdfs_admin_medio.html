@@ -1,10 +1,11 @@
-{% extends 'layout_admin_medio.html' %}
+{% extends 'layout.html' %}
 {% block title %}Reportes Individuales - Admin Medio{% endblock %}
 
 {% block content %}
 <h2 class="text-center mb-4">Reportes Individuales Generados por Usuarios de {{ session['empresa_nombre'] }}</h2>
 
-<form id="eliminarForm" action="{{ url_for('eliminar_multiples') }}" method="post" onsubmit="return confirmarEliminacion()">
+<form id="eliminarForm" action="{{ url_for('eliminar_multiples') }}" method="post"
+    onsubmit="return confirmarEliminacion()">
     <input type="hidden" name="origen" value="admin_medio_individual" />
     <input type="hidden" name="seleccionados" id="checkboxesEliminar" />
     <div class="tabla-contenedor mb-4">
@@ -21,7 +22,8 @@
                 </tr>
                 <tr class="search-row">
                     <td colspan="7">
-                        <input type="text" id="buscador" class="form-control" placeholder="Buscar por nombre de PDF..." autocomplete="off" />
+                        <input type="text" id="buscador" class="form-control" placeholder="Buscar por nombre de PDF..."
+                            autocomplete="off" />
                     </td>
                 </tr>
             </thead>
@@ -35,13 +37,16 @@
                     <td class="text-truncate" style="max-width: 300px;" title="{{ archivo }}">{{ archivo }}</td>
                     <td class="text-center align-middle">{{ mapa_usuario.get(archivo, 'Desconocido') }}</td>
                     <td class="text-center align-middle">
-                        <button type="button" class="btn btn-primary btn-sm" onclick="mostrarModal('{{ url_for('ver_pdf', nombre=archivo) }}')">Ver</button>
+                        <button type="button" class="btn btn-primary btn-sm"
+                            onclick="mostrarModal('{{ url_for('ver_pdf', nombre=archivo) }}')">Ver</button>
                     </td>
                     <td class="text-center align-middle">
-                        <a href="{{ url_for('editar_pdf', nombre=archivo) }}?origen=pdfs_admin_medio" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{{ url_for('editar_pdf', nombre=archivo) }}?origen=pdfs_admin_medio"
+                            class="btn btn-warning btn-sm">Editar</a>
                     </td>
                     <td class="text-center align-middle">
-                        <a class="btn btn-success btn-sm" href="{{ url_for('descargar_pdf', nombre=archivo) }}" download>Descargar</a>
+                        <a class="btn btn-success btn-sm" href="{{ url_for('descargar_pdf', nombre=archivo) }}"
+                            download>Descargar</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -49,14 +54,55 @@
         </table>
     </div>
 
-    <div class="d-flex justify-content-center mt-3">
-        <button type="submit" class="btn btn-danger px-4 py-2">
-            Eliminar Seleccionados
-        </button>
-    </div>
+
 </form>
 
+<form id="descargarForm" action="{{ url_for('descargar_multiples') }}" method="post" style="display: none;">
+    <input type="hidden" name="seleccionados_descarga" id="checkboxesDescarga" />
+</form>
+
+<div class="d-flex justify-content-center mt-3 gap-3">
+    <button type="button" class="btn btn-outline-dark px-4 py-2 fw-semibold" onclick="toggleSeleccion()">Seleccionar /
+        Deseleccionar Todos
+    </button>
+    <button type="submit" class="btn btn-success px-4 py-2" form="descargarForm">
+        Descargar Seleccionados
+    </button>
+    <button type="submit" class="btn btn-danger px-4 py-2" form="eliminarForm">
+        Eliminar Seleccionados
+    </button>
+</div>
+
 <script>
+
+    function confirmarEliminacion() {
+        const checkboxes = document.querySelectorAll('input[name="seleccionados"]:checked');
+        if (checkboxes.length === 0) {
+            alert('Por favor seleccione al menos un archivo para eliminar.');
+            return false;
+        }
+        return confirm('¿Está seguro que desea eliminar los archivos seleccionados?');
+    }
+
+    function toggleSeleccion() {
+        const checkboxes = document.querySelectorAll("input[name='seleccionados']");
+        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+        checkboxes.forEach(cb => cb.checked = !allChecked);
+    }
+
+
+    function actualizarCheckboxes() {
+        const seleccionados = Array.from(document.querySelectorAll("input[name='seleccionados']:checked"))
+            .map(cb => cb.value)
+            .join(',');
+
+        document.getElementById("checkboxesEliminar").value = seleccionados;
+        document.getElementById("checkboxesDescarga").value = seleccionados;
+    }
+
+    document.getElementById("eliminarForm").addEventListener("submit", actualizarCheckboxes);
+    document.getElementById("descargarForm").addEventListener("submit", actualizarCheckboxes);
+
     function confirmarEliminacion() {
         const checkboxes = document.querySelectorAll('input[name="seleccionados"]:checked');
         if (checkboxes.length === 0) {

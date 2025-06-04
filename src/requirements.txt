@@ -7,4 +7,9 @@ openpyxl
 datetime
 matplotlib
 python-dotenv
+reportlab
+docx
+pymupdf
+fitz
 psycopg2-binary
+

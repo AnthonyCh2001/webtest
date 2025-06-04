@@ -110,6 +110,7 @@
           <span class="form-switch-label">Usar Google Sheets</span>
         </div>
 
+
         <!-- Campo para archivo Excel -->
         <div class="mb-3 text-start" id="campo-excel">
           <label for="archivo" class="form-label">Seleccionar archivo Excel (.xlsx):</label>
@@ -124,8 +125,20 @@
           <small class="form-text text-muted">Debe estar compartido públicamente o con enlace de visualización.</small>
         </div>
 
+        <!-- Selector de tipo de reporte -->
+        <div class="mb-4 text-start">
+          <label for="tipo_reporte" class="form-label">Tipo de reporte a generar:</label>
+          <select class="form-select" id="tipo_reporte" name="tipo_reporte" required>
+            <option value="" disabled selected>Selecciona una opción...</option>
+            <option value="clinico">Clínico</option>
+            <option value="psicotecnico">Psicotécnico</option>
+          </select>
+        </div>
+
         <button type="submit" class="btn btn-purple w-100">Generar Reportes</button>
       </form>
+
+
 
       <!-- Progreso -->
       <div id="progreso-container" class="mt-4 d-none">

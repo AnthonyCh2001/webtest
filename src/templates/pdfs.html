@@ -2,11 +2,18 @@
 {% block title %}Reportes individuales{% endblock %}
 
 {% block content %}
-<h2>Reportes de Candidatos</h2>
+<h2 class="text-center">Reportes de Candidatos</h2>
 
 <!-- FORMULARIO SOLO PARA SELECCIÓN Y ENVÍO -->
 <form id="comparativoForm" action="{{ url_for('comparar_candidatos') }}" method="post"
     onsubmit="return validarSeleccion()">
+    <div class="d-flex justify-content-between flex-wrap align-items-center mb-3 gap-2">
+        <a href="{{ url_for('cargar_data') }}" class="btn btn-outline-secondary px-4 py-2 fw-semibold">
+            Agregar Nuevos Candidatos
+        </a>
+    </div>
+
+
     <div class="tabla-contenedor mb-4">
         <table class="table table-striped table-hover align-middle">
             <thead class="table-dark">
@@ -52,28 +59,35 @@
             </tbody>
         </table>
     </div>
-
-    <div class="d-flex justify-content-center gap-3 flex-wrap">
-        <button type="submit" class="btn btn-purple px-4 py-2" name="accion" value="generar">
-            Generar Informe Comparativo
-        </button>
-
-        <a href="{{ url_for('cargar_data') }}" class="btn btn-secondary px-4 py-2">
-            Agregar nuevos candidatos
-        </a>
-    </div>
 </form>
 
-
-<form id="eliminarForm" action="{{ url_for('eliminar_multiples') }}" method="post"
-    onsubmit="return confirmarEliminacion()">
-    <input type="hidden" name="seleccionados" id="checkboxesEliminar" />
-    <div class="d-flex justify-content-center mt-3">
-        <button type="submit" class="btn btn-danger px-4 py-2">
-            Eliminar Seleccionados
-        </button>
-    </div>
+<form id="descargarForm" action="{{ url_for('descargar_multiples') }}" method="post" style="display: none;">
+    <input type="hidden" name="seleccionados_descarga" id="checkboxesDescarga">
 </form>
+
+<form id="eliminarForm" action="{{ url_for('eliminar_multiples') }}" method="post" style="display: none;">
+    <input type="hidden" name="seleccionados" id="checkboxesEliminar">
+    <input type="hidden" name="origen" value="pdfs">
+</form>
+
+<!-- Formularios para eliminar y descargar -->
+<div class="d-flex justify-content-center flex-wrap gap-3 mb-4">
+    <button type="button" class="btn btn-outline-dark px-4 py-2 fw-semibold" onclick="toggleSeleccion()">Seleccionar /
+        Deseleccionar Todos
+    </button>
+
+    <button type="submit" form="comparativoForm" class="btn btn-purple px-4 py-2 fw-semibold">
+        Generar Informe Comparativo
+    </button>
+
+    <button type="submit" form="descargarForm" class="btn btn-success px-4 py-2 fw-semibold">
+        Descargar Seleccionados
+    </button>
+
+    <button type="submit" form="eliminarForm" class="btn btn-danger px-4 py-2 fw-semibold">
+        Eliminar Seleccionados
+    </button>
+</div>
 
 <!-- Modal -->
 <div id="modalPDF" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -84,41 +98,33 @@
     </div>
 </div>
 
-
 <script>
-
-
-    function prepararEdicion(nombre) {
-        const origen = window.location.pathname.includes("comparativos") ? "pdfs_comparativos" : "pdfs";
-        document.getElementById('formEditar').action = '/editar_pdf/' + encodeURIComponent(nombre);
-        document.getElementById('nombre_actual').value = nombre;
-        document.getElementById('nuevo_nombre').value = nombre;
-        document.getElementById('origen_edicion').value = origen;
+    function toggleSeleccion() {
+        const checkboxes = document.querySelectorAll("input[name='seleccionados']");
+        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+        checkboxes.forEach(cb => cb.checked = !allChecked);
     }
 
+    function actualizarCheckboxes() {
+        const seleccionados = Array.from(document.querySelectorAll("input[name='seleccionados']:checked"))
+            .map(cb => cb.value)
+            .join(',');
 
+        document.getElementById("checkboxesEliminar").value = seleccionados;
+        document.getElementById("checkboxesDescarga").value = seleccionados;
+    }
 
-    window.onclick = function (event) {
-        const modal = document.getElementById("modalPDF");
-        if (event.target == modal) {
-            cerrarModal();
-        }
-    };
+    document.getElementById("eliminarForm").addEventListener("submit", actualizarCheckboxes);
+    document.getElementById("descargarForm").addEventListener("submit", actualizarCheckboxes);
 
     document.getElementById('buscador').addEventListener('keyup', function () {
         const filtro = this.value.toLowerCase();
         const filas = document.querySelectorAll("table tbody tr");
-
         filas.forEach(fila => {
             const nombreArchivo = fila.cells[2].textContent.toLowerCase();
             fila.style.display = nombreArchivo.includes(filtro) ? "" : "none";
         });
     });
-
-    // Placeholder para la función abrirEditor, asegúrate de definirla en tu JS o backend
-    function abrirEditor(nombreArchivo) {
-        // Ejemplo: redirigir a una ruta para editar archivo
-        window.location.href = `/editar_pdf/${encodeURIComponent(nombreArchivo)}`;
-    }
 </script>
+
 {% endblock %}

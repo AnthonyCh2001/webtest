@@ -1,0 +1,57 @@
+{% extends 'layout.html' %}
+{% block title %}Editar Empresa{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Editar Empresa</h2>
+    <form action="{{ url_for('editar_empresa', empresa_id=empresa.id) }}" method="post" class="mt-3">
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre de la Empresa</label>
+            <input type="text" id="nombre" name="nombre" class="form-control" value="{{ empresa.nombre }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="nombre_admin" class="form-label">Nombre del Administrador</label>
+            <input type="text" id="nombre_admin" name="nombre_admin" class="form-control" value="{{ admin.nombre }}"
+                required>
+        </div>
+
+        <div class="mb-3">
+            <label for="correo_admin" class="form-label">Correo del Administrador</label>
+            <input type="email" id="correo_admin" name="correo_admin" class="form-control" value="{{ admin.email }}"
+                required>
+        </div>
+
+        <div class="mb-3">
+            <label for="contrasena_admin" class="form-label">Contraseña del Administrador</label>
+            <input type="password" id="contrasena_admin" name="contrasena_admin" class="form-control"
+                placeholder="(Dejar vacío para no cambiar)">
+        </div>
+
+
+        <div class="mb-3">
+            <label for="plan" class="form-label">Plan</label>
+            <select id="plan" name="plan" class="form-select" required>
+                <option value="Básico" {% if empresa.plan=='Básico' %}selected{% endif %}>Básico</option>
+                <option value="Intermedio" {% if empresa.plan=='Intermedio' %}selected{% endif %}>Intermedio</option>
+                <option value="Premium" {% if empresa.plan=='Premium' %}selected{% endif %}>Premium</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="limite_usuarios" class="form-label">Límite de Usuarios</label>
+            <input type="number" id="limite_usuarios" name="limite_usuarios" class="form-control" min="1"
+                value="{{ empresa.limite_usuarios }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="limite_reportes" class="form-label">Límite de Reportes</label>
+            <input type="number" id="limite_reportes" name="limite_reportes" class="form-control" min="1"
+                value="{{ empresa.limite_reportes }}" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <a href="{{ url_for('vista_admin_superior') }}" class="btn btn-secondary ms-2">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

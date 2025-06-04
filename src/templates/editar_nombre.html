@@ -85,12 +85,12 @@
         </div>
 
         <div class="d-grid gap-2">
-          <button type="submit" class="btn btn-primary" disabled>
-            <i class="bi bi-save"></i> Guardar Cambios
-          </button>
-          <a href="{% if origen == 'pdfs_comparativo_admin_medio' %}{{ url_for('listar_pdfs_comparativo_admin_medio') }}
-                   {% elif origen == 'pdfs_admin_medio' %}{{ url_for('listar_pdfs_admin_medio') }}
-                   {% elif origen == 'pdfs_comparativos' %}{{ url_for('listar_pdfs_comparativos') }}
+          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+          <a href="{% if origen == 'admin_medio_individual' %}{{ url_for('listar_pdfs_admin_medio') }}
+                   {% elif origen == 'admin_medio_comparativo' %}{{ url_for('listar_pdfs_comparativo_admin_medio') }}
+                   {% elif origen == 'admin_medio_resumidos' %}{{ url_for('listar_pdfs_resumidos_admin_medio') }}
+                   {% elif origen == 'resumidos' %}{{ url_for('listar_pdfs_resumidos') }}
+                   {% elif origen == 'comparativos' %}{{ url_for('listar_pdfs_comparativos') }}
                    {% else %}{{ url_for('listar_pdfs') }}{% endif %}" class="btn btn-secondary">
             <i class="bi bi-x-circle"></i> Cancelar
           </a>

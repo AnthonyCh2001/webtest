@@ -1,11 +1,11 @@
 {% extends 'layout.html' %}
-{% block title %}Reportes Comparativos - Admin Medio{% endblock %}
+{% block title %}Reportes Resumidos - Admin Medio{% endblock %}
 
 {% block content %}
-<h2 class="text-center mb-4">Reportes Comparativos Generados por Usuarios de {{ session['empresa_nombre'] }}</h2>
+<h2 class="text-center mb-4">Reportes Resumidos Generados por Usuarios de {{ session['empresa_nombre'] }}</h2>
 
 <form id="eliminarForm" action="{{ url_for('eliminar_multiples') }}" method="post" onsubmit="return confirmarEliminacion()">
-    <input type="hidden" name="origen" value="admin_medio_comparativo" />
+    <input type="hidden" name="origen" value="admin_medio_resumidos" />
     <input type="hidden" name="seleccionados" id="checkboxesEliminar" />
     <div class="tabla-contenedor mb-4">
         <table class="table table-striped table-hover align-middle">
@@ -38,7 +38,7 @@
                         <button type="button" class="btn btn-primary btn-sm" onclick="mostrarModal('{{ url_for('ver_pdf', nombre=archivo) }}')">Ver</button>
                     </td>
                     <td class="text-center align-middle">
-                        <a href="{{ url_for('editar_pdf', nombre=archivo) }}?origen=pdfs_comparativo_admin_medio" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{{ url_for('editar_pdf', nombre=archivo) }}?origen=pdfs_resumidos_admin_medio" class="btn btn-warning btn-sm">Editar</a>
                     </td>
                     <td class="text-center align-middle">
                         <a class="btn btn-success btn-sm" href="{{ url_for('descargar_pdf', nombre=archivo) }}" download>Descargar</a>
@@ -48,7 +48,6 @@
             </tbody>
         </table>
     </div>
-
 
 </form>
 
