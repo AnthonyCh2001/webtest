@@ -1595,25 +1595,24 @@ def gestion_planes():
 
 @app.route('/admin_medio')
 def vista_admin_medio():
-    if session.get('rol') != 'admin_medio':
-        return redirect(url_for('login'))
+    usuario_id = session.get("usuario_id")
+    if not usuario_id:
+        return redirect("/")
 
-    empresa_id = session.get('empresa_id')
-    print(f"[admin_medio] empresa_id en sesión: {empresa_id}")
+    dao_empresas = DAOEmpresas()
+    dao_reportes = DAOReportes()
 
-    try:
-        empresa_id = int(empresa_id)
-    except:
-        print("[admin_medio] empresa_id no es válido")
-        return "Error interno: empresa_id inválido", 500
+    empresa_id = dao_empresas.obtener_empresa_id_por_usuario(usuario_id)
+    usuarios = dao_empresas.obtener_usuarios_por_empresa(empresa_id)
 
-    usuarios = dao_usuario.obtener_usuarios_por_empresa(empresa_id)
-    print(f"[admin_medio] Usuarios encontrados: {usuarios}")
-
-    for usuario in usuarios:
+    usuarios_con_datos = []
+    for row in usuarios:
+        usuario = dict(row)  # Convertimos el DictRow en un diccionario normal
         usuario['cantidad_reportes'] = dao_reportes.contar_reportes_por_usuario(usuario['id'])
+        usuarios_con_datos.append(usuario)
 
-    return render_template('admin_medio.html', usuarios=usuarios)
+    return render_template('admin_medio.html', usuarios=usuarios_con_datos)
+
 
 @app.route('/admin_medio/agregar', methods=['GET', 'POST'])
 def admin_medio_agregar():
