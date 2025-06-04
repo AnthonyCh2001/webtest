@@ -163,10 +163,10 @@
                 <i class="fas fa-users"></i> Gestión de Usuarios
             </a>
             <a href="{{ url_for('listar_pdfs_admin_medio') }}" class="{% if request.endpoint == 'listar_pdfs_admin_medio' %}active{% endif %}">
-                <i class="fas fa-file-alt"></i> Reportes de Candidatos
+                <i class="fas fa-file-alt"></i> Reportes Clínicos
             </a>
             <a href="{{ url_for('listar_pdfs_resumidos_admin_medio') }}" class="{% if request.endpoint == 'listar_pdfs_resumidos_admin_medio' %}active{% endif %}">
-                <i class="fas fa-columns"></i> Reportes Resumidos
+                <i class="fas fa-columns"></i> Reportes Psicométricos
             </a>
             <a href="{{ url_for('listar_pdfs_comparativo_admin_medio') }}" class="{% if request.endpoint == 'listar_pdfs_comparativo_admin_medio' %}active{% endif %}">
                 <i class="fas fa-columns"></i> Reportes Comparativos
