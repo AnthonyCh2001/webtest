@@ -1518,7 +1518,7 @@ def nueva_empresa():
             empresa_id = dao_empresas.crear_empresa_y_retornar_id(nombre_empresa, plan, limite_usuarios, limite_reportes)
 
             # Crear administrador medio
-            dao_usuario.insertar_usuario(nombre_admin, correo_admin, contrasena_admin, empresa_id, rol='admin_medio')
+            dao_usuario.insertar_usuario(nombre_admin, correo_admin, contrasena_admin, empresa_id)
 
             flash("Empresa y administrador creados exitosamente", "success")
             return redirect(url_for('vista_admin_superior'))
