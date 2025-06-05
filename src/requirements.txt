@@ -4,6 +4,7 @@ cohere
 fpdf
 pandas==1.5.3
 openpyxl
+numpy==1.24.4
 datetime
 matplotlib
 python-dotenv
