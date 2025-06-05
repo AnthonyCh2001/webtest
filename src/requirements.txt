@@ -2,7 +2,7 @@ Flask
 pymysql
 cohere
 fpdf
-pandas
+pandas==1.5.3
 openpyxl
 datetime
 matplotlib
